@@ -66,7 +66,7 @@ impl<T> AsyncQueue<T> {
                 }
 
                 // Ordering: this is where we sync with pushing threads.
-                let next_ptr = (*prev_head).next.load(Ordering::Relaxed);
+                let next_ptr = (*prev_head).next.load(Ordering::Acquire);
                 if next_ptr == ptr::null_mut() {
                     // Stub
                     self.front.swap(prev_head, Ordering::Relaxed);
