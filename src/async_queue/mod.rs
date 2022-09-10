@@ -73,6 +73,7 @@ impl<T> AsyncQueue<T> {
                     return None;
                 }
 
+                // Have to move data out before exiting critical section lest it be deallocated.
                 let data = (*next_ptr).data.assume_init_read();
 
                 // Ordering: fence operations to occur after this (our critical section).
@@ -81,7 +82,7 @@ impl<T> AsyncQueue<T> {
 
                 self.node_count.fetch_sub(1, Ordering::Relaxed);
 
-                // Have to deallocate the previous head, and return the value from `next_ptr`.
+                // Have to deallocate the previous head.
                 drop(Box::from_raw(prev_head));
 
                 return Some(data);
