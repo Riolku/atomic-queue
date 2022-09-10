@@ -1,9 +1,9 @@
 use super::*;
-use std::thread::scope;
-use std::sync::{Arc, Barrier};
 use rand::distributions::uniform::Uniform;
 use rand::distributions::Distribution;
 use rand::thread_rng;
+use std::sync::{Arc, Barrier};
+use std::thread::scope;
 
 #[test]
 fn simple_test() {
@@ -48,7 +48,10 @@ fn no_receivers() {
 #[test]
 fn simple_pipeline() {
     let samples = 100;
-    let start: Vec<_> = Uniform::new(0, 10).sample_iter(thread_rng()).take(samples).collect();
+    let start: Vec<_> = Uniform::new(0, 10)
+        .sample_iter(thread_rng())
+        .take(samples)
+        .collect();
 
     let (sender_one, receiver_one) = channel();
     let (sender_two, receiver_two) = channel();
